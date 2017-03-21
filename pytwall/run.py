@@ -1,5 +1,6 @@
 import click
-from twitterwall import TwitterWall
+
+from pytwall.twitterwall import TwitterWall
 
 
 @click.command()
