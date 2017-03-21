@@ -17,7 +17,7 @@ def run(config_file, query, init_num, interval, retweets):
     ''' Run terminal Twitter Wall '''
 
     ptw = TwitterWall(config_file)
-    ptw.generate_tweets(query, init_num, interval, retweets)
+    ptw.print_tweets(query, init_num, interval, retweets)
 
 
 if __name__ == '__main__':

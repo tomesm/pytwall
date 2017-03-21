@@ -14,7 +14,7 @@ class TwitterWall:
         self.last_id = 0
 
 
-    def generate_tweets(self, query, init_num, interval, retweets):
+    def print_tweets(self, query, init_num, interval, retweets):
         ''' Infinite main loop which prints all the tweets
 
             :param query: A searched expression (eg. #python)
@@ -22,46 +22,56 @@ class TwitterWall:
             :param interval: Time interval of next queries
             :param retweets: Include retweets?
         '''
+        # print init tweets
+        self.print_init_tweets(query, init_num, retweets)
 
-        # print init number of tweets
-        statuses = self.get_statuses(q=query)
-        # show given number of newest tweets from 'statuses' list
-        for tweet in statuses[:init_num]:
+        for tweet in self.generate_tweets(q=query, since_id=self.last_id,
+                                 count=init_num, result_type='recent'):
             if retweets or not self.is_retweet(tweet):
                 print(tweet['text'])
-        # get last tweet id
-        self.last_id = statuses[0]['id']
+                time.sleep(interval)
 
-        # TODO: break down into more functions - replace FOR loops with generators
+
+    def generate_tweets(self, **kwargs):
+        ''' Infinite generator of tweets
+
+        '''
         while True:
-            time.sleep(interval)
-            # check if something is changed
-            new_statuses = self.get_statuses(q=query, since_id=self.last_id)
-
-            if new_statuses and statuses != new_statuses:
-                # new statuses detected
-                for tweet in new_statuses:
-                    if retweets or not self.is_retweet(tweet):
-                        print(tweet['text'])
-
-                self.last_id = new_statuses[0]['id']
-
-            # copy new list into old list
-            statuses = new_statuses[:]
-            new_statuses = []
+            yield from (self.get_statuses(**kwargs))
 
 
     def get_statuses(self, **kwargs):
-        ''' Returns a list of statuses based of a given query
+        ''' Returns a list of statuses based of a given query and params
 
-            :param session: An established instance session
             :param kwargs: All parameters for search query
             :return: Statuses found based on given params
         '''
         tw_addr = 'https://api.twitter.com/1.1/search/tweets.json'  #twitter API address
         response = self.session.get(tw_addr, params=kwargs)
+        response.raise_for_status()
+        statuses = response.json()['statuses']
 
-        return response.json()['statuses']
+        if statuses:
+            self.last_id = statuses[0]['id']
+
+        return statuses
+
+
+    def print_init_tweets(self, query, init_num, retweets):
+        """ Prints initial tweets
+
+        :param query:
+        :param init_num:
+        """
+        statuses = self.get_statuses(q=query, count=init_num,
+                                     result_type='recent')
+
+        if statuses:
+            self.last_id = statuses[0]['id']
+        # show given number of newest tweets from 'statuses' list
+        for tweet in statuses:
+            if retweets or not self.is_retweet(tweet):
+                print(tweet['text'])
 
 
     @classmethod
@@ -116,4 +126,3 @@ class TwitterWall:
         config.read(file)
 
         return config['twitter']['api_key'], config['twitter']['api_secret']
-
