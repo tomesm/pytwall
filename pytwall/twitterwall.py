@@ -16,7 +16,6 @@ class TwitterWall:
 
     def print_tweets(self, query, init_num, interval, retweets):
         ''' Infinite main loop which prints all the tweets
-
             :param query: A searched expression (eg. #python)
             :param init_num: Number of lodaded tweets at the beginning
             :param interval: Time interval of next queries
@@ -34,7 +33,6 @@ class TwitterWall:
 
     def generate_tweets(self, **kwargs):
         ''' Infinite generator of tweets
-
         '''
         while True:
             yield from (self.get_statuses(**kwargs))
@@ -42,7 +40,6 @@ class TwitterWall:
 
     def get_statuses(self, **kwargs):
         ''' Returns a list of statuses based of a given query and params
-
             :param kwargs: All parameters for search query
             :return: Statuses found based on given params
         '''
@@ -59,7 +56,6 @@ class TwitterWall:
 
     def print_init_tweets(self, query, init_num, retweets):
         """ Prints initial tweets
-
         :param query:
         :param init_num:
         """
@@ -77,7 +73,6 @@ class TwitterWall:
     @classmethod
     def is_retweet(cls, tweet):
         """ Checks if the tweet is a retweet
-
             :param tweet:
             :return: True if the tweet is a retweet
         """
@@ -86,7 +81,6 @@ class TwitterWall:
 
     def get_session(self, api_key, api_secret):
         """ Gets sessions
-
             :param api_key:
             :param api_secret:
             :return: established session
@@ -118,7 +112,6 @@ class TwitterWall:
 
     def get_credentials(self, file):
         """ Derives credentials form an auth file
-
             :param file: a config file with auth keys
             :return: config list with twitter credentials
         """
