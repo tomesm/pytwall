@@ -23,9 +23,9 @@ def hello_eng(username=None, count=1):
     return render_template('hello.html', name=username)
 
 
-@app.template_filter('reverse_text')
-def reverse_text(text):
-    return reversed(text)
+@app.template_filter('reverse')
+def reverse(text):
+    return ''.join(reversed(text))  # anaconda, python 3.6 je treba join ''
 
 
 @app.template_filter('em')
