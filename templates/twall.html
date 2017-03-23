@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+
+<title>{{ hashtag }}</title>
+
+{% for tweet in tweets %}
+    <p>
+        <img alt="" src="{{ tweet.user.profile_image_url }}" align="left" />
+        <strong>@{{ tweet.user.screen_name }}</strong> {{ tweet.created_at | time }}<br />
+        {{ tweet.text }}
+    </p>
+{% endfor %}
