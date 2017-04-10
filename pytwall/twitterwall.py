@@ -1,11 +1,9 @@
 """ Twitter Wall
-
 The module loads a configurable number of initial tweets, displays them and
 than an infinite loop is run to check for new tweets in a configurable interval.
-
 """
 
-import configparser
+
 import requests
 import base64
 import time
@@ -14,11 +12,9 @@ import time
 class TwitterWall:
     ''' Class for running the twitter wall logic '''
 
-    def __init__(self, config_file):
+    def __init__(self, api_key, api_secret):
         ''' Class constructor initializes a session and last ID'''
-        # TODO: remove keys from the class into cmd.py
-        self.api_key, self.api_secret = self.get_credentials(config_file)
-        self.session = self.get_session(self.api_key, self.api_secret)
+        self.session = self.get_session(api_key, api_secret)
         self.last_id = 0
 
 
@@ -58,7 +54,6 @@ class TwitterWall:
 
         if statuses:
             self.last_id = statuses[0]['id']
-
         return statuses
 
 
@@ -110,20 +105,7 @@ class TwitterWall:
 
         def bearer_auth(req):
             req.headers['Authorization'] = 'Bearer ' + bearer_token
-
             return req
 
         session.auth = bearer_auth
-
         return session
-
-
-    def get_credentials(self, file):
-        """ Derives credentials form an auth file
-            :param file: a config file with auth keys
-            :return: config list with twitter credentials
-        """
-        config = configparser.ConfigParser()
-        config.read(file)
-
-        return config['twitter']['api_key'], config['twitter']['api_secret']
