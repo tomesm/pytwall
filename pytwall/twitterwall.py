@@ -2,8 +2,6 @@
 The module loads a configurable number of initial tweets, displays them and
 than an infinite loop is run to check for new tweets in a configurable interval.
 """
-
-
 import requests
 import base64
 import time

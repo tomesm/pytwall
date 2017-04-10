@@ -1,7 +1,9 @@
 import click
 import configparser
+import sys
 
 from .twitterwall import TwitterWall
+
 
 def get_credentials(file):
     """ Derives credentials form an auth file
@@ -26,6 +28,8 @@ def get_credentials(file):
 
 def run(config_file, query, init_num, interval, retweets):
     ''' Run terminal Twitter Wall '''
-
-    ptw = TwitterWall(*get_credentials(config_file))
-    ptw.print_tweets(query, init_num, interval, retweets)
+    try:
+        ptw = TwitterWall(*get_credentials(config_file))
+        ptw.print_tweets(query, init_num, interval, retweets)
+    except BaseException as ex:
+        print(ex, file=sys.stderr)
