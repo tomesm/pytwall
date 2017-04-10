@@ -1,3 +1,10 @@
+""" Twitter Wall
+
+The module loads a configurable number of initial tweets, displays them and
+than an infinite loop is run to check for new tweets in a configurable interval.
+
+"""
+
 import configparser
 import requests
 import base64
@@ -9,6 +16,7 @@ class TwitterWall:
 
     def __init__(self, config_file):
         ''' Class constructor initializes a session and last ID'''
+        # TODO: remove keys from the class into cmd.py
         self.api_key, self.api_secret = self.get_credentials(config_file)
         self.session = self.get_session(self.api_key, self.api_secret)
         self.last_id = 0

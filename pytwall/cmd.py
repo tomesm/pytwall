@@ -18,7 +18,3 @@ def run(config_file, query, init_num, interval, retweets):
 
     ptw = TwitterWall(config_file)
     ptw.print_tweets(query, init_num, interval, retweets)
-
-
-if __name__ == '__main__':
-    run()
