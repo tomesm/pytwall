@@ -10,10 +10,41 @@ import time
 class TwitterWall:
     ''' Class for running the twitter wall logic '''
 
-    def __init__(self, api_key, api_secret):
+    def __init__(self, api_key, api_secret, session=None):
         ''' Class constructor initializes a session and last ID'''
-        self.session = self.get_session(api_key, api_secret)
+        self.session = session or requests.Session()
         self.last_id = 0
+
+        self.set_session(api_key, api_secret)
+
+
+        def set_session(self, api_key, api_secret):
+            """ Gets sessions
+            :param api_key:
+            :param api_secret:
+            :return: established session
+        """
+        secret = '{}:{}'.format(api_key, api_secret)
+        secret64 = base64.b64encode(secret.encode('ascii')).decode('ascii')
+
+        headers = {
+            'Authorization': 'Basic {}'.format(secret64),
+            'Host': 'api.twitter.com',
+        }
+
+        request = self.session.post('https://api.twitter.com/oauth2/token',
+                            headers=headers,
+                            data={'grant_type': 'client_credentials'})
+
+        request.raise_for_status()
+
+        bearer_token = request.json()['access_token']
+
+        def bearer_auth(req):
+            req.headers['Authorization'] = 'Bearer ' + bearer_token
+            return req
+
+        self.session.auth = bearer_auth
 
 
     def print_tweets(self, query, init_num, interval, retweets):
@@ -79,31 +110,3 @@ class TwitterWall:
         """
         return 'retweeted_status' in tweet or tweet['text'].startswith('RT @')
 
-
-    def get_session(self, api_key, api_secret):
-        """ Gets sessions
-            :param api_key:
-            :param api_secret:
-            :return: established session
-        """
-        session = requests.Session()
-        secret = '{}:{}'.format(api_key, api_secret)
-        secret64 = base64.b64encode(secret.encode('ascii')).decode('ascii')
-
-        headers = {
-            'Authorization': 'Basic {}'.format(secret64),
-            'Host': 'api.twitter.com',
-        }
-
-        request = session.post('https://api.twitter.com/oauth2/token',
-                            headers=headers,
-                            data={'grant_type': 'client_credentials'})
-
-        bearer_token = request.json()['access_token']
-
-        def bearer_auth(req):
-            req.headers['Authorization'] = 'Bearer ' + bearer_token
-            return req
-
-        session.auth = bearer_auth
-        return session
