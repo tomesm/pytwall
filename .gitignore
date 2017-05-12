@@ -2,6 +2,8 @@
 auth.cfg
 test.py
 *.sublime*
+error.txt
+test/fixtures/
 
 # Editors, IDEs
 .vscode/

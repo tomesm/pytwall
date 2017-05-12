@@ -18,11 +18,11 @@ class TwitterWall:
         self.set_session(api_key, api_secret)
 
 
-        def set_session(self, api_key, api_secret):
-            """ Gets sessions
-            :param api_key:
-            :param api_secret:
-            :return: established session
+    def set_session(self, api_key, api_secret):
+        """ Gets sessions
+        :param api_key:
+        :param api_secret:
+        :return: established session
         """
         secret = '{}:{}'.format(api_key, api_secret)
         secret64 = base64.b64encode(secret.encode('ascii')).decode('ascii')
